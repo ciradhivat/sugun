@@ -1,0 +1,24 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+#flashcard {
+    width: 400px; /* หรือขนาดคงที่เช่น 400px ตามที่เหมาะสม ถ้า 60% การวางระยะห่างของอักษรจะห่างมาก*/
+    height: auto; /* หรือค่าคงที่ที่เหมาะสมเพื่อควบคุมขนาด */
+    padding: 20px; /* เพิ่ม padding เพื่อให้เนื้อหาไม่ติดขอบ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em; /* ทำให้ตัวอักษรใหญ่ขึ้น */
+    line-height: 0.5; /* ปรับค่านี้เพื่อควบคุมระยะห่างระหว่างบรรทัด */
+    cursor: pointer;
+    border: 2px solid #000;
+    border-radius: 10px;
+    background-color: #FFF;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
