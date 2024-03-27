@@ -1,0 +1,152 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.header, .footer {
+  background-color: #f1f1f1;
+  height: 10%; /* 10% ของ viewport height */
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.container {
+  height: 80%; /* 80% ของ viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flashcard {
+  width: 90%;
+  height: 90%;
+  padding: 10px;
+  margin: 10px;
+  background-color: white;
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: large;
+  text-align: left;
+}
+
+/* ทำให้เว็บไซต์ responsive */
+@media (min-width: 120px) {
+  .flashcard {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .flashcard {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .flashcard {
+    font-size: 4rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .flashcard {
+    font-size: 5rem;
+  }
+}
+
+@media (min-width: 2040px) {
+  .flashcard {
+    font-size: 6rem;
+  }
+}
+
+@media (min-width: 2768px) {
+  .flashcard {
+    font-size: 7rem;
+  }
+}
+
+@media (min-width: 3840px) {
+  .flashcard {
+    font-size: 8rem;
+  }
+}
+
+.hamburger-list {
+  cursor: pointer;
+  display: none; /* หรือ 'block' ตามสถานการณ์เมื่อเมนูถูกเปิด */
+  position: absolute; /* หรือ 'fixed'; ตามความต้องการ */
+  top: 50px;
+  left: 0;
+  width: 250px;
+  max-height: 50vh;
+  overflow-y: auto;
+  background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%); /* ใช้ gradient */
+  box-shadow: 0px 8px 15px rgba(0,0,0,0.2);
+  z-index: 1000;
+  padding: 0.5% 3%;
+}
+
+.hamburger-list.active {
+  display: block; /* แสดงเมนูเมื่อถูกเปิด */
+}
+
+.hamburger-list a {
+  display: block;
+  padding: 10px 0; /* เพิ่ม padding */
+  text-decoration: none;
+  color: #ffffff; /* สีของข้อความลิงก์ */
+  font-size: 16px; /* ปรับ font-size */
+  transition: color 0.3s, background-color 0.3s, padding-left 0.3s; /* แอนิเมชั่น */
+}
+
+.hamburger-list a:hover {
+  background-color: #f0f0f0; /* เปลี่ยนสีพื้นหลังเมื่อ hover */
+  color: #6a11cb; /* สีข้อความเมื่อ hover */
+  padding-left: 20px; /* เพิ่ม padding-left เพื่อสร้างเอฟเฟกต์เมื่อ hover */
+}
+
+.reset {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  font-size: medium;
+  cursor: grab;
+  padding: 2px 2px;
+  background-color: #28a745; /* สีเขียว */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.reset:hover {
+  background-color: #218838; /* สีเขียวที่เข้มขึ้นเมื่อโฮเวอร์ */
+}
+
+footer {
+  position: relative;
+}
+
+.slideshow-control {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 2px 2px;
+  background-color: #007bff; /* สีน้ำเงิน */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: medium;
+}
+
+.slideshow-control:hover {
+  background-color: #0056b3; /* สีน้ำเงินที่เข้มขึ้นเมื่อโฮเวอร์ */
+}
+/* สิ้นสุด ฟังก์ชั่น slide show */
