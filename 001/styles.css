@@ -45,7 +45,7 @@ body, html {
 /* ทำให้เว็บไซต์ responsive */
 @media (max-width: 1280px) {
   .flashcard {
-    font-size: 1.5rem;
+    font-size: 2rem;
   }
 }
 
