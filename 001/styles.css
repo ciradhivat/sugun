@@ -43,7 +43,7 @@ body, html {
 }
 
 /* ทำให้เว็บไซต์ responsive */
-@media (min-width: 320px) {
+@media (min-width: 120px) {
   .flashcard {
     font-size: 2rem;
   }
