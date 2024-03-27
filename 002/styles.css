@@ -51,7 +51,37 @@ body, html {
 
 @media (min-width: 768px) {
   .flashcard {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .flashcard {
+    font-size: 4rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .flashcard {
     font-size: 5rem;
+  }
+}
+
+@media (min-width: 2040px) {
+  .flashcard {
+    font-size: 6rem;
+  }
+}
+
+@media (min-width: 2768px) {
+  .flashcard {
+    font-size: 7rem;
+  }
+}
+
+@media (min-width: 3840px) {
+  .flashcard {
+    font-size: 8rem;
   }
 }
 
