@@ -1,0 +1,81 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.header, .footer {
+  background-color: #f1f1f1;
+  height: 10%; /* 10% ของ viewport height */
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.container {
+  height: 80%; /* 80% ของ viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flashcard {
+  width: 90%;
+  height: 90%;
+  padding: 10px;
+  margin: 10px;
+  background-color: white;
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: large;
+  text-align: justify;
+}
+
+.hamburger-list {
+  cursor: pointer;
+}
+
+.reset {
+  font-size: medium;
+  cursor: grab;
+}
+
+/* ทำให้เว็บไซต์ responsive */
+@media (max-width: 768px) {
+  .flashcard {
+    font-size: 1.5rem;
+  }
+}
+
+.hamburger-list {
+  display: none; /* หรือ 'block' ตามสถานการณ์เมื่อเมนูถูกเปิด */
+  position: absolute; /* หรือ 'fixed'; ตามความต้องการ */
+  top: 50px; /* กำหนดตำแหน่งที่จะปรากฏ */
+  left: 0;
+  width: 250px;
+  max-height: 50vh; /* กำหนดความสูงสูงสุดไม่ให้เกิน 50% ของหน้าจอ */
+  overflow-y: auto; /* ให้สามารถเลื่อนได้เมื่อเนื้อหาเกินความสูงสูงสุด */
+  background-color: #f1f1f1; /* สีพื้นหลังของเมนู */
+  box-shadow: 0px 4px 5px rgba(0,0,0,0.2); /* ให้เงาเล็กน้อยเพื่อลูกเล่น */
+  z-index: 1000; /* ให้เมนูปรากฏอยู่เหนือเนื้อหาอื่นๆ */
+  padding: 0.5% 3%;
+}
+
+.hamburger-list.active {
+  display: block; /* แสดงเมนูเมื่อถูกเปิด */
+}
+
+
+.hamburger-list a {
+  display: block; /* ทำให้แต่ละลิงก์มีบรรทัดของตัวเอง */
+  padding: 2px 0; /* เพิ่ม padding ด้านบนและด้านล่างเพื่อให้มีพื้นที่ห่างระหว่างลิงก์, ปรับค่าตามต้องการ */
+  text-decoration: none; /* อาจจะลบเส้นใต้ลิงก์, ตามความต้องการ */
+  color: #000; /* ปรับสีของข้อความลิงก์, ตามความต้องการ */
+  font-size: large;
+}
+
+.hamburger-list a:hover {
+  background-color: #f0f0f0; /*เปลี่ยนสีพื้นหลังเมื่อ hover, ตามความต้องการ*/
+}
