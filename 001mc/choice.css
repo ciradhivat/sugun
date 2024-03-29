@@ -21,7 +21,6 @@ footer {
     padding: 20px;
     height: 90%;
     box-sizing: border-box;
-    font-size: 1.5rem;
     overflow-y: auto;
 }
 
@@ -106,10 +105,73 @@ button:hover {
 button {
     padding: 10px 20px;
     margin: 5px;
-    font-size: 1.4rem;
     /* ปรับขนาดตัวอักษรให้เหมาะสม */
     background-color: #f4f4f4;
     /* ปรับสีพื้นหลัง */
     color: #6a11cb;
     /* ปรับสีข้อความ */
 }
+
+/* เริ่มใช้ มีเดีย */
+@media (min-width: 120px) {
+    .container {
+      font-size: 1.6rem;
+    }
+    .choice {
+        font-size: 1.5rem;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .container {
+      font-size: 1.8rem;
+    }
+    .choice {
+        font-size: 1.7rem;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .container {
+      font-size: 2.3rem;
+    }
+    .choice {
+        font-size: 2.2rem;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .container {
+      font-size: 2.8rem;
+    }
+    .choice {
+        font-size: 2.6;
+    }
+  }
+  
+  @media (min-width: 2040px) {
+    .container {
+      font-size: 3.3rem;
+    }
+    .choice {
+        font-size: 3.2rem;
+    }
+  }
+  
+  @media (min-width: 2768px) {
+    .container {
+      font-size: 3.8rem;
+    }
+    .choice {
+        font-size: 3.7rem;
+    }
+  }
+  
+  @media (min-width: 3840px) {
+    .container {
+      font-size: 4.3rem;
+    }
+    .choice {
+        font-size: 4.2rem;
+    }
+  }
