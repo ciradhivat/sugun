@@ -1,0 +1,115 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100%;
+}
+
+header,
+footer {
+    padding: 20px;
+    text-align: left;
+    background-color: #f4f4f4;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    height: 90%;
+    box-sizing: border-box;
+    font-size: 1.5rem;
+    overflow-y: auto;
+}
+
+.hamburger-menu,
+button {
+    cursor: pointer;
+    background-color: #6a11cb;
+    /* สีพื้นหลังปุ่ม */
+    color: white;
+    /* สีข้อความปุ่ม */
+    transition: background-color 0.3s, color 0.3s, padding-left 0.3s;
+}
+
+.hamburger-menu:hover,
+button:hover {
+    background-color: #2575fc;
+    /* สีเมื่อ hover */
+    color: #ffffff;
+    /* สีข้อความเมื่อ hover */
+    padding-left: 20px;
+    /* เพิ่ม padding-left เพื่อสร้างเอฟเฟกต์เมื่อ hover */
+}
+
+.hamburger-list {
+    display: none;
+    /* แสดงเมื่อถูกเปิด */
+    position: absolute;
+    top: 80px;
+    left: 20px;
+    width: 250px;
+    max-height: 50vh;
+    overflow-y: auto;
+    background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    padding: 0.5% 3%;
+}
+
+.hamburger-list.active {
+    display: block;
+}
+
+.hamburger-list a {
+    display: block;
+    padding: 15px 20px;
+    /* ปรับปรุงความหนาของ padding */
+    text-decoration: none;
+    color: #ffffff;
+    /* สีข้อความลิงก์ */
+    font-size: 18px;
+    /* ขนาดของตัวอักษร */
+    font-weight: bold;
+    /* ทำให้ข้อความหนาขึ้น */
+    background-color: transparent;
+    /* สีพื้นหลังเริ่มต้น */
+    transition: all 0.3s ease-in-out;
+    /* ปรับปรุงการเปลี่ยนแปลงสีและพื้นหลัง */
+    border-left: 5px solid transparent;
+    /* เพิ่มเอฟเฟกต์ขอบด้านซ้าย */
+}
+
+.hamburger-list a:hover {
+    background-color: #f0f0f0;
+    /* เปลี่ยนสีพื้นหลังเมื่อ hover */
+    color: #6a11cb;
+    /* สีข้อความเมื่อ hover */
+    border-left: 5px solid #6a11cb;
+    /* เปลี่ยนสีขอบด้านซ้ายเมื่อ hover */
+    padding-left: 25px;
+    /* เพิ่ม padding-left เพื่อสร้างเอฟเฟกต์เมื่อ hover */
+}
+
+.correct {
+    border: 2px solid greenyellow;
+}
+
+.incorrect {
+    border: 2px solid red;
+}
+
+.choice,
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 1.4rem;
+    /* ปรับขนาดตัวอักษรให้เหมาะสม */
+    background-color: #f4f4f4;
+    /* ปรับสีพื้นหลัง */
+    color: #6a11cb;
+    /* ปรับสีข้อความ */
+}
