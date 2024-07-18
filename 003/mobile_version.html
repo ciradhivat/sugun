@@ -110,6 +110,10 @@
             "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
         ];
 
+        const dayNames = [
+            "อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัส", "ศุกร์", "เสาร์"
+        ];
+
         const today = new Date();
         let currentMonth = today.getMonth();
         let currentYear = today.getFullYear();
@@ -181,6 +185,10 @@
             updateCalendar();
         }
 
+        function getDayName(date) {
+            return dayNames[date.getDay()];
+        }
+
         function updateDetails() {
             const startDateElement = document.getElementById("start-date");
             const endDateElement = document.getElementById("end-date");
@@ -190,9 +198,10 @@
             const diffTime = Math.abs(currentDateObj - startDate);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            startDateElement.innerText = `จุดเริ่มต้น ${startDate.getDate()} ${monthNames[startDate.getMonth()]} ค.ศ. ${startDate.getFullYear()}`;
-            endDateElement.innerText = `จุดสิ้นสุด ${currentDateObj.getDate()} ${monthNames[currentDateObj.getMonth()]} ค.ศ. ${currentDateObj.getFullYear()}`;
-            totalDaysElement.innerText = `นับจำนวนวัน ${diffDays+1} วัน`;// นับวันแรกด้วย
+            startDateElement.innerHTML = `<h5 style="display: inline;color: white;">จุดเริ่มต้น</h5> <h2 style="display: inline;">${startDate.getDate()} ${monthNames[startDate.getMonth()]} ค.ศ. ${startDate.getFullYear()} (${getDayName(startDate)})</h2>`;
+
+            endDateElement.innerHTML = `<h5 style="display: inline;color: white;">จุดสิ้นสุด</h5> <h2 style="display: inline;">${currentDateObj.getDate()} ${monthNames[currentDateObj.getMonth()]} ค.ศ. ${currentDateObj.getFullYear()} (${getDayName(currentDateObj)})</h2>`;
+            totalDaysElement.innerHTML = `นับจำนวนวัน <h2 style="display: inline;">${diffDays+1}</h2> วัน`;// นับวันแรกด้วย
         }
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -201,3 +210,4 @@
     </script>
 </body>
 </html>
+หากต้องการ ให้ จุดสิ้นสุด เปลี่ยนแปลง ตาม การกด วันที่ ใน ปฏิทิน ทำได้ หรือไม่ ทำอย่างไร ครับ
