@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ปฏิทิน</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #333; /* เปลี่ยนสีพื้นหลังของ body */
+        }
+        #calendar {
+            text-align: center;
+            color: #fff; /* เปลี่ยนสีตัวอักษรในปฏิทิน */
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .navigation {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #444; /* เปลี่ยนสีพื้นหลังของตาราง */
+        }
+        th, td {
+            width: 14.28%;
+            border: 1px solid #555; /* เปลี่ยนสีเส้นขอบของตาราง */
+            text-align: center;
+            padding: 10px;
+            color: #fff; /* เปลี่ยนสีตัวอักษรในเซลล์ */
+        }
+        th {
+            background-color: #555; /* เปลี่ยนสีพื้นหลังของส่วนหัวตาราง */
+        }
+        .year-input {
+            margin-bottom: 20px;
+        }
+        .today {
+           /* background-image: url('https://via.placeholder.com/150');*/
+            background-image: url('papchan.jpg');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white; /* เพื่อให้เห็นตัวเลขชัดเจน */
+        }
+        @media (max-width: 600px) {
+            th, td {
+                padding: 5px;
+            }
+            .navigation button {
+                padding: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="calendar">
+        <div class="navigation">
+            <button onclick="previousMonth()">ก่อนหน้า</button>
+            <button onclick="nextMonth()">ถัดไป</button>
+        </div>
+        <div class="year-input">
+            <label for="year">ปี ค.ศ.: </label>
+            <input type="number" id="year" min="1" max="5000" onchange="updateYear()">
+        </div>
+        <div id="month-year"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>อา</th>
+                    <th>จ</th>
+                    <th>อ</th>
+                    <th>พ</th>
+                    <th>พฤ</th>
+                    <th>ศ</th>
+                    <th>ส</th>
+                </tr>
+            </thead>
+            <tbody id="days"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const monthNames = [
+            "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+            "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+        ];
+
+        const today = new Date();
+        let currentMonth = today.getMonth();
+        let currentYear = today.getFullYear();
+        const currentDate = today.getDate();
+
+        function updateCalendar() {
+            const daysElement = document.getElementById("days");
+            const monthYearElement = document.getElementById("month-year");
+            const yearInput = document.getElementById("year");
+
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+
+            daysElement.innerHTML = "";
+            monthYearElement.innerText = `${monthNames[currentMonth]} ${currentYear}`;
+            yearInput.value = currentYear;
+
+            let date = 1;
+            for (let i = 0; i < 6; i++) {
+                const row = document.createElement("tr");
+
+                for (let j = 0; j < 7; j++) {
+                    const cell = document.createElement("td");
+                    if (i === 0 && j < firstDay) {
+                        cell.innerText = "";
+                    } else if (date > daysInMonth) {
+                        break;
+                    } else {
+                        cell.innerText = date;
+                        if (date === currentDate && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
+                            cell.classList.add("today");
+                        }
+                        date++;
+                    }
+                    row.appendChild(cell);
+                }
+
+                daysElement.appendChild(row);
+            }
+        }
+
+        function previousMonth() {
+            if (currentMonth === 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else {
+                currentMonth--;
+            }
+            updateCalendar();
+        }
+
+        function nextMonth() {
+            if (currentMonth === 11) {
+                currentMonth = 0;
+                currentYear++;
+            } else {
+                currentMonth++;
+            }
+            updateCalendar();
+        }
+
+        function updateYear() {
+            const yearInput = document.getElementById("year");
+            currentYear = parseInt(yearInput.value, 10);
+            updateCalendar();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            updateCalendar();
+        });
+    </script>
+</body>
+</html>
