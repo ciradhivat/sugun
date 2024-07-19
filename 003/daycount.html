@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ปฏิทินและการนับจำนวนวัน</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .custom-input {
+            @apply block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50;
+        }
+        .custom-button {
+            @apply px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold text-center mb-6">การนับวัน</h1>
+        <div class="mb-4">
+            <label for="startDate" class="block text-sm font-medium text-gray-700">วันเริ่มต้น:</label>
+            <input type="date" id="startDate" class="custom-input">
+        </div>
+        <div class="mb-4">
+            <label for="endDate" class="block text-sm font-medium text-gray-700">วันสิ้นสุด:</label>
+            <input type="date" id="endDate" class="custom-input">
+        </div>
+        <div class="flex justify-between mb-4">
+            <button id="countButton" class="custom-button">นับจำนวนวัน</button>
+            <button id="refreshButton" class="custom-button bg-green-600 hover:bg-green-700">ค่าเริ่มต้น</button>
+        </div>
+        <div id="dayCount" class="mt-4 text-center text-lg font-semibold"></div>
+        <div id="buddhistDate" class="mt-2 text-center text-sm text-gray-600"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+            const countButton = document.getElementById('countButton');
+            const refreshButton = document.getElementById('refreshButton');
+            const dayCountDisplay = document.getElementById('dayCount');
+            const buddhistDateDisplay = document.getElementById('buddhistDate');
+
+            function updateDateInputs() {
+                startDateInput.value = '1736-01-28';
+                const today = new Date();
+                endDateInput.value = today.toISOString().split('T')[0];
+            }
+
+            function countDays() {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+
+                if (startDate && endDate) {
+                    const timeDiff = endDate.getTime() - startDate.getTime();
+                    const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
+                    dayCountDisplay.textContent = `จำนวนวันระหว่างวันที่เลือก: ${dayDiff.toLocaleString('th-TH')} วัน`;
+                    updateBuddhistDate(endDate);
+                } else {
+                    dayCountDisplay.textContent = "กรุณาเลือกวันให้ครบทั้งสองวัน";
+                    buddhistDateDisplay.textContent = "";
+                }
+            }
+
+            function updateBuddhistDate(date) {
+                const buddhistYear = date.getFullYear() + 543;
+                const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+                buddhistDateDisplay.textContent = `วันที่ ${date.getDate()} ${monthNames[date.getMonth()]} พ.ศ. ${buddhistYear}`;
+            }
+
+            function refreshDates() {
+                updateDateInputs();
+                countDays();
+            }
+
+            countButton.addEventListener('click', countDays);
+            refreshButton.addEventListener('click', refreshDates);
+            [startDateInput, endDateInput].forEach(input => {
+                input.addEventListener('change', countDays);
+            });
+
+            refreshDates();
+        });
+    </script>
+</body>
+</html>
