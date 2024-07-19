@@ -6,66 +6,78 @@
     <title>ปฏิทิน</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             height: 100vh;
             margin: 0;
-            background-color: #333; /* เปลี่ยนสีพื้นหลังของ body */
+            background-color: #f5f5f5;
         }
         #calendar {
             text-align: center;
-            color: #fff; /* เปลี่ยนสีตัวอักษรในปฏิทิน */
+            color: #333;
             width: 90%;
             max-width: 600px;
             margin: 0 auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
         }
         .navigation {
             margin-bottom: 20px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #444; /* เปลี่ยนสีพื้นหลังของตาราง */
-        }
-        th, td {
-            width: 14.28%;
-            border: 1px solid #555; /* เปลี่ยนสีเส้นขอบของตาราง */
-            text-align: center;
+        .navigation select,
+        .navigation button {
             padding: 10px;
-            color: #fff; /* เปลี่ยนสีตัวอักษรในเซลล์ */
-        }
-        th {
-            background-color: #555; /* เปลี่ยนสีพื้นหลังของส่วนหัวตาราง */
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin: 0 5px;
         }
         .year-input {
             margin-bottom: 20px;
+        }
+        .year-input label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        .year-input input {
+            padding: 5px;
+            font-size: 16px;
+            width: 100px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            width: 14.28%;
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 10px;
+            color: #333;
+        }
+        th {
+            background-color: #007bff;
+            color: #fff;
         }
         .today {
             background-image: url('papchan.jpg');
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
-            color: white; /* เพื่อให้เห็นตัวเลขชัดเจน */
-        }
-        .details {
-            margin-top: 20px;
-            color: #fff; /* เปลี่ยนสีตัวอักษรในรายละเอียด */
-            font-size: 20px;
-        }
-        #start-date {
-            color: red;
-        }
-        #end-date {
-            color: blue;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 50%;
         }
         @media (max-width: 600px) {
             th, td {
-                padding: 5px;
-            }
-            .navigation button {
                 padding: 5px;
             }
         }
@@ -74,12 +86,25 @@
 <body>
     <div id="calendar">
         <div class="navigation">
-            <button onclick="previousMonth()">ก่อนหน้า</button>
-            <button onclick="nextMonth()">ถัดไป</button>
+            <select id="month" onchange="updateMonth()">
+                <option value="0">มกราคม</option>
+                <option value="1">กุมภาพันธ์</option>
+                <option value="2">มีนาคม</option>
+                <option value="3">เมษายน</option>
+                <option value="4">พฤษภาคม</option>
+                <option value="5">มิถุนายน</option>
+                <option value="6">กรกฎาคม</option>
+                <option value="7">สิงหาคม</option>
+                <option value="8">กันยายน</option>
+                <option value="9">ตุลาคม</option>
+                <option value="10">พฤศจิกายน</option>
+                <option value="11">ธันวาคม</option>
+            </select>
+            <button onclick="refreshToToday()">ปัจจุบัน</button>
         </div>
         <div class="year-input">
             <label for="year">ปี ค.ศ.: </label>
-            <input type="number" id="year" min="1" max="5000" onchange="updateYear()">
+            <input type="number" id="year" onchange="updateYear()">
         </div>
         <div id="month-year"></div>
         <table>
@@ -97,12 +122,6 @@
             <tbody id="days"></tbody>
         </table>
     </div>
-    <div class="details">
-        <div>ปฏิทิน</div>
-        <div id="start-date">จุดเริ่มต้น 28 มกราคม ค.ศ. 1736</div>
-        <div id="end-date">จุดสิ้นสุด วัน เดือน ปี ปัจจุบัน</div>
-        <div id="total-days">นับจำนวนวัน แสดงผลการคำนวณ วัน</div>
-    </div>
 
     <script>
         const monthNames = [
@@ -110,28 +129,24 @@
             "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
         ];
 
-        const dayNames = [
-            "อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัส", "ศุกร์", "เสาร์"
-        ];
-
         const today = new Date();
         let currentMonth = today.getMonth();
         let currentYear = today.getFullYear();
         const currentDate = today.getDate();
 
-        const startDate = new Date(1736, 0, 28); // 28 มกราคม ค.ศ. 1736
-
         function updateCalendar() {
             const daysElement = document.getElementById("days");
             const monthYearElement = document.getElementById("month-year");
             const yearInput = document.getElementById("year");
+            const monthSelect = document.getElementById("month");
 
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
             const firstDay = new Date(currentYear, currentMonth, 1).getDay();
 
             daysElement.innerHTML = "";
-            monthYearElement.innerText = `${monthNames[currentMonth]} ${currentYear}`;
+            monthYearElement.innerText = `${monthNames[currentMonth]} ค.ศ. ${currentYear}`;
             yearInput.value = currentYear;
+            monthSelect.value = currentMonth;
 
             let date = 1;
             for (let i = 0; i < 6; i++) {
@@ -155,27 +170,11 @@
 
                 daysElement.appendChild(row);
             }
-
-            updateDetails(); // Ensure details are updated whenever the calendar is updated
         }
 
-        function previousMonth() {
-            if (currentMonth === 0) {
-                currentMonth = 11;
-                currentYear--;
-            } else {
-                currentMonth--;
-            }
-            updateCalendar();
-        }
-
-        function nextMonth() {
-            if (currentMonth === 11) {
-                currentMonth = 0;
-                currentYear++;
-            } else {
-                currentMonth++;
-            }
+        function updateMonth() {
+            const monthSelect = document.getElementById("month");
+            currentMonth = parseInt(monthSelect.value, 10);
             updateCalendar();
         }
 
@@ -185,23 +184,10 @@
             updateCalendar();
         }
 
-        function getDayName(date) {
-            return dayNames[date.getDay()];
-        }
-
-        function updateDetails() {
-            const startDateElement = document.getElementById("start-date");
-            const endDateElement = document.getElementById("end-date");
-            const totalDaysElement = document.getElementById("total-days");
-
-            const currentDateObj = new Date(currentYear, currentMonth, currentDate);
-            const diffTime = Math.abs(currentDateObj - startDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            startDateElement.innerHTML = `<h5 style="display: inline;color: white;">จุดเริ่มต้น</h5> <h2 style="display: inline;">${startDate.getDate()} ${monthNames[startDate.getMonth()]} ค.ศ. ${startDate.getFullYear()} (${getDayName(startDate)})</h2>`;
-
-            endDateElement.innerHTML = `<h5 style="display: inline;color: white;">จุดสิ้นสุด</h5> <h2 style="display: inline;">${currentDateObj.getDate()} ${monthNames[currentDateObj.getMonth()]} ค.ศ. ${currentDateObj.getFullYear()} (${getDayName(currentDateObj)})</h2>`;
-            totalDaysElement.innerHTML = `นับจำนวนวัน <h2 style="display: inline;">${diffDays+1}</h2> วัน`;// นับวันแรกด้วย
+        function refreshToToday() {
+            currentMonth = today.getMonth();
+            currentYear = today.getFullYear();
+            updateCalendar();
         }
 
         document.addEventListener("DOMContentLoaded", function() {
