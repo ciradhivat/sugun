@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คำนวณวันที่สิ้นสุด</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+        label, input, button {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input, button {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        .date-info {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>คำนวณวันที่สิ้นสุด</h2>
+        <label for="startDate">วันที่เริ่มต้น:</label>
+        <input type="date" id="startDate" required>
+        <label for="days">จำนวนวัน:</label>
+        <input type="number" id="days" min="1" required>
+        <button onclick="calculateEndDate()">คำนวณ</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const defaultStartDate = new Date('1736-01-28');
+        const daysOfWeek = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
+        
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function formatDateThai(date) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = date.toLocaleDateString('th-TH', options);
+            const dayOfWeek = daysOfWeek[date.getDay()];
+            // const yearInBuddhistEra = date.getFullYear() + 543;
+            const yearInChristEra = date.getFullYear();
+            return `วัน${dayOfWeek}ที่ ${formattedDate} (ค.ศ. ${yearInChristEra})`;
+        }
+
+        document.getElementById('startDate').value = formatDate(defaultStartDate);
+
+        function calculateEndDate() {
+            const startDate = new Date(document.getElementById('startDate').value);
+            const days = parseInt(document.getElementById('days').value);
+            
+            if (isNaN(startDate.getTime()) || isNaN(days)) {
+                alert('กรุณากรอกข้อมูลให้ถูกต้อง');
+                return;
+            }
+
+            const endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + days - 1);  // ลบ 1 เพราะนับวันแรกเป็น 1
+
+            const resultElement = document.getElementById('result');
+            resultElement.innerHTML = `
+                <div class="date-info">
+                    <strong>วันที่เริ่มต้น:</strong><br>${formatDateThai(startDate)}
+                </div>
+                <div class="date-info">
+                    <strong>วันที่สิ้นสุด:</strong><br>${formatDateThai(endDate)}
+                </div>
+                <div>
+                    <strong>จำนวนวันทั้งหมด:</strong> ${days} วัน
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
