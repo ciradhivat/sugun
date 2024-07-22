@@ -10,31 +10,36 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
+            padding: 20px;
+            box-sizing: border-box;
         }
         .container {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 300px;
-        }
-        label, input, button {
-            display: block;
-            margin-bottom: 10px;
-        }
-        input, button {
             width: 100%;
-            padding: 8px;
+            max-width: 400px;
+        }
+        label, input, button, select {
+            display: block;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        input, button, select {
+            padding: 10px;
             box-sizing: border-box;
+            font-size: 16px;
         }
         button {
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
         button:hover {
             background-color: #45a049;
@@ -43,7 +48,15 @@
             margin-top: 20px;
         }
         .date-info {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            body {
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -54,6 +67,12 @@
         <input type="date" id="startDate" required>
         <label for="days">จำนวนวัน:</label>
         <input type="number" id="days" min="1" required>
+        <label for="fontSize">ขนาดตัวอักษร:</label>
+        <select id="fontSize">
+            <option value="16px">ปกติ</option>
+            <option value="18px">ใหญ่</option>
+            <option value="20px">ใหญ่มาก</option>
+        </select>
         <button onclick="calculateEndDate()">คำนวณ</button>
         <div id="result"></div>
     </div>
@@ -73,7 +92,6 @@
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             const formattedDate = date.toLocaleDateString('th-TH', options);
             const dayOfWeek = daysOfWeek[date.getDay()];
-            // const yearInBuddhistEra = date.getFullYear() + 543;
             const yearInChristEra = date.getFullYear();
             return `วัน${dayOfWeek}ที่ ${formattedDate} (ค.ศ. ${yearInChristEra})`;
         }
@@ -90,7 +108,7 @@
             }
 
             const endDate = new Date(startDate);
-            endDate.setDate(endDate.getDate() + days - 1);  // ลบ 1 เพราะนับวันแรกเป็น 1
+            endDate.setDate(endDate.getDate() + days - 1);
 
             const resultElement = document.getElementById('result');
             resultElement.innerHTML = `
@@ -105,6 +123,11 @@
                 </div>
             `;
         }
+
+        // เพิ่มฟังก์ชันสำหรับการเปลี่ยนขนาดตัวอักษร
+        document.getElementById('fontSize').addEventListener('change', function() {
+            document.body.style.fontSize = this.value;
+        });
     </script>
 </body>
 </html>
