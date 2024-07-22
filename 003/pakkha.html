@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ปฏิทินปักข์ - นับจำนวนวัน</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold text-center mb-6">ปฏิทินปักข์</h1>
+        <div class="mb-4">
+            <label class="block text-lg font-medium text-gray-700">วันเริ่มต้น:</label>
+            <p class="mt-1 text-lg text-gray-600">28 มกราคม ค.ศ. 1736 (พ.ศ. 2279)</p>
+        </div>
+        <div class="mb-4">
+            <label for="endDate" class="block text-lg font-medium text-gray-700">วันสิ้นสุด:</label>
+            <input type="date" id="endDate" class="block w-full mt-1 rounded-md border-gray-300 shadow-md text-lg focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" max="2528-11-27">
+            <p class="mt-1 text-sm text-red-600" id="dateWarning" style="display: none;">วันที่เลือกต้องไม่เกิน 27 พฤศจิกายน ค.ศ. 2528</p>
+            <button id="maxDateButton" class="w-full mt-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">วันที่สูงสุด</button>
+        </div>
+        <div id="buddhistDateAndDay" class="text-xl font-semibold mt-4 text-center"></div>
+        <div id="dayCount" class="mt-4 text-center text-lg font-semibold"></div>
+        <div id="pakkhakaResult" class="mt-4 text-lg"></div>
+    </div>
+
+    <script>
+        function calculateDates(days) {
+            let sampayuha = Math.floor(days / 16168) + 1;
+            let remainder_sampayuha = days % 16168;
+
+            if (remainder_sampayuha === 0) {
+                sampayuha -= 1;
+                remainder_sampayuha = 16168;
+            }
+
+            let payuha = Math.floor(remainder_sampayuha / 1447) + 1;
+            let remainder_payuha = remainder_sampayuha % 1447;
+
+            if (sampayuha === 18 && payuha > 10) {
+                payuha = 10;
+                remainder_payuha += 1447;
+            } else if (payuha > 11) {
+                payuha = 11;
+                remainder_payuha += 1447;
+            }
+
+            if (remainder_payuha === 0) {
+                payuha -= 1;
+                remainder_payuha = 1447;
+            }
+
+            let samuha = Math.floor(remainder_payuha / 251) + 1;
+            let remainder_samuha = remainder_payuha % 251;
+
+            if (remainder_samuha === 0) {
+                samuha -= 1;
+                remainder_samuha = 251;
+            }
+
+            let wakkha = Math.floor(remainder_samuha / 59) + 1;
+            let remainder_wakkha = remainder_samuha % 59;
+
+            if ((samuha === 6 || samuha === 7) && wakkha > 3) {
+                wakkha = 3;
+                remainder_wakkha += 59;
+            } else if (wakkha > 4) {
+                wakkha = 4;
+                remainder_wakkha += 59;
+            }
+
+            if (remainder_wakkha === 0) {
+                wakkha -= 1;
+                remainder_wakkha = 59;
+            }
+
+            let pakkha = Math.floor(remainder_wakkha / 15) + 1;
+            let remainder_pakkha = remainder_wakkha % 15;
+
+            if (remainder_pakkha === 0) {
+                pakkha -= 1;
+                remainder_pakkha = 15;
+            }
+
+            // คำนวณข้างขึ้นข้างแรม
+            let moonphase = ((sampayuha-1)*1095 + (payuha-1)*98 + (samuha-1)*17 + (wakkha-1)*4 + pakkha) % 2 === 0 ? "ขึ้น" : "แรม";
+
+            return {
+                "สัมพยุหะ": sampayuha,
+                "พยุหะ": payuha,
+                "สมุหะ": samuha,
+                "วรรค": wakkha,
+                "ปักข์": pakkha,
+                "ดิถี": remainder_pakkha,
+                "ข้าง": moonphase
+            };
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const startDate = new Date('1736-01-28');
+            const maxEndDate = new Date('2528-11-27');
+            const endDateInput = document.getElementById('endDate');
+            const maxDateButton = document.getElementById('maxDateButton');
+            const dayCountDisplay = document.getElementById('dayCount');
+            const buddhistDateAndDayDisplay = document.getElementById('buddhistDateAndDay');
+            const dateWarning = document.getElementById('dateWarning');
+            const pakkhakaResultDisplay = document.getElementById('pakkhakaResult');
+
+            function setMaxEndDate() {
+                const year = maxEndDate.getFullYear();
+                const month = String(maxEndDate.getMonth() + 1).padStart(2, '0');
+                const day = String(maxEndDate.getDate()).padStart(2, '0');
+                endDateInput.value = `${year}-${month}-${day}`;
+                dateWarning.style.display = 'none';
+                countDays();
+            }
+
+            function countDays() {
+                const endDate = new Date(endDateInput.value);
+
+                if (endDate > maxEndDate) {
+                    dateWarning.style.display = 'block';
+                    dayCountDisplay.textContent = "";
+                    buddhistDateAndDayDisplay.textContent = "";
+                    pakkhakaResultDisplay.textContent = "";
+                    return;
+                }
+
+                dateWarning.style.display = 'none';
+
+                if (endDate) {
+                    const timeDiff = endDate.getTime() - startDate.getTime();
+                    const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
+                    dayCountDisplay.textContent = `จำนวนวัน: ${dayDiff.toLocaleString('th-TH')} วัน`;
+                    updateBuddhistDateAndDay(endDate);
+                    updatePakkhakaResult(dayDiff);
+                } else {
+                    dayCountDisplay.textContent = "กรุณาเลือกวันสิ้นสุด";
+                    buddhistDateAndDayDisplay.textContent = "";
+                    pakkhakaResultDisplay.textContent = "";
+                }
+            }
+
+            function updateBuddhistDateAndDay(date) {
+                const buddhistYear = date.getFullYear() + 543;
+                const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+                const dayNames = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
+                const dayOfWeek = dayNames[date.getDay()];
+                buddhistDateAndDayDisplay.textContent = `${dayOfWeek} ${date.getDate()} ${monthNames[date.getMonth()]} พ.ศ. ${buddhistYear}`;
+            }
+
+            function updatePakkhakaResult(days) {
+                const result = calculateDates(days);
+                let resultText = "ผลลัพธ์ปฏิทินปักข์:<br>";
+                for (const [key, value] of Object.entries(result)) {
+                    resultText += `${key}: ${value}<br>`;
+                }
+                pakkhakaResultDisplay.innerHTML = resultText;
+            }
+
+            function setDefaultEndDate() {
+                let today = new Date();
+                if (today > maxEndDate) {
+                    today = maxEndDate;
+                }
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                endDateInput.value = `${year}-${month}-${day}`;
+                dateWarning.style.display = 'none';
+            }
+
+            maxDateButton.addEventListener('click', setMaxEndDate);
+            endDateInput.addEventListener('change', countDays);
+
+            setDefaultEndDate();
+            countDays();
+        });
+    </script>
+</body>
+</html>
