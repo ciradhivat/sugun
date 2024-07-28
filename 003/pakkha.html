@@ -81,15 +81,42 @@
 
         <div id="dayCount" class="mt-4 text-center text-lg font-semibold"></div>
 
-        <div id="pakkhakaResult" class="mt-4 text-center text-xl"></div>
+        <div id="pakkhakaResult" class="mt-4 text-center text-xl">
+            <p id="day"></p>
+            <p id="sampayuha"></p>
+            <p id="payuha"></p>
+            <p id="samuha"></p>
+            <p id="wakkha"></p>
+            <p id="pakkha"></p>
+            <p id="dithi"></p>
+            <p id="moonphase"></p>
+            <p id="pak_code"></p>
+
+        </div>
 
     </div>
 
     <script>
+        const column = {
+            "สัมพยุหะ": 0,
+            "พยุหะ": 0,
+            "สมุหะ": 0,
+            "วรรค": 0,
+            "ปักข์": 0,
+        };
+
+        const row = {
+            "สัมพยุหะ": "",
+            "พยุหะ": "พยุหะ_จม_11_บน",
+            "สมุหะ": "สมุหะ_มจ_6_ล่าง",
+            "วรรค": "วรรค_จม_4_บน",
+            "ปักข์": "ปักข์_มจ_4_ล่าง",
+        };
         function calculateDates(days) {
             let sampayuha = Math.floor(days / 16168) + 1;
             let remainder_sampayuha = days % 16168;
 
+            // ปรับค่า สัมพยุหะ เมื่อ เศษเป็นศูนย์
             if (remainder_sampayuha === 0) {
                 sampayuha -= 1;
                 remainder_sampayuha = 16168;
@@ -98,14 +125,23 @@
             let payuha = Math.floor(remainder_sampayuha / 1447) + 1;
             let remainder_payuha = remainder_sampayuha % 1447;
 
+            // ปรับค่า พยุหะ ถ้าเกินขีดจำกัด
             if (sampayuha === 18 && payuha > 10) {
                 payuha = 10;
                 remainder_payuha += 1447;
-            } else if (payuha > 11) {
+            } 
+            if (sampayuha === 18 && payuha === 10) {
+                payuha = 10;
+            }
+            if (payuha > 11) {
                 payuha = 11;
                 remainder_payuha += 1447;
             }
+            if (payuha === 11) {
+                payuha = 11;
+            }
 
+            // ปรับค่า พยุหะ เมื่อเศษเป็นศูนย์
             if (remainder_payuha === 0) {
                 payuha -= 1;
                 remainder_payuha = 1447;
@@ -114,6 +150,23 @@
             let samuha = Math.floor(remainder_payuha / 251) + 1;
             let remainder_samuha = remainder_payuha % 251;
 
+            // ปรับค่า สมุหะ เมื่อเกินขีดจำกัด
+            if (payuha === 11 && samuha > 7) {
+                samuha = 7;
+                remainder_samuha += 251;
+            }
+            if (payuha === 11 && samuha === 7) {
+                samuha = 7;
+            }
+            if (row["พยุหะ"] === "พยุหะ_จม_10_ล่าง" && payuha === 10 && samuha > 7) {
+                samuha = 7;
+                remainder_samuha += 251;
+            }
+            if (row["พยุหะ"] === "พยุหะ_จม_10_ล่าง" && payuha === 10 && samuha === 7) {
+                samuha = 7;
+            }
+
+            // ปรับค่า สมุหะ เมื่อเศษเป็นศูนย์
             if (remainder_samuha === 0) {
                 samuha -= 1;
                 remainder_samuha = 251;
@@ -122,14 +175,27 @@
             let wakkha = Math.floor(remainder_samuha / 59) + 1;
             let remainder_wakkha = remainder_samuha % 59;
 
-            if ((samuha === 6 || samuha === 7) && wakkha > 3) {
+            // ปรับค่า วรรค เมื่อเกินขีดจำกัด
+            if (samuha === 7 && wakkha > 3) {
                 wakkha = 3;
                 remainder_wakkha += 59;
-            } else if (wakkha > 4) {
+            }
+            if (samuha === 7 && wakkha === 3) {
+                wakkha = 3;
+            }
+            if (row["สมุหะ"] === "สมุหะ_มจ_6_ล่าง" && samuha === 6 && wakkha > 3) {
+                wakkha = 3;
+                remainder_wakkha += 59
+            }
+            if (row["สมุหะ"] === "สมุหะ_มจ_6_ล่าง" && samuha === 6 && wakkha === 3) {
+                wakkha = 3;
+            }
+            if (wakkha > 4) {
                 wakkha = 4;
                 remainder_wakkha += 59;
             }
 
+            // ปรับค่า วรรค เมื่อเศษเป็นศูนย์
             if (remainder_wakkha === 0) {
                 wakkha -= 1;
                 remainder_wakkha = 59;
@@ -138,6 +204,22 @@
             let pakkha = Math.floor(remainder_wakkha / 15) + 1;
             let remainder_pakkha = remainder_wakkha % 15;
 
+            // ปรับค่า ปักข์ เมื่อเกินขีดจำกัด
+            if (wakkha === 4 && pakkha > 5) {
+                pakkha = 5;
+                remainder_pakkha += 15;
+            }
+            if (wakkha === 4 && pakkha ===5) {
+                pakkha = 5;
+            }
+            if (row["วรรค"] === "วรรค_จม_3_ล่าง" && wakkha === 3 && pakkha > 5) {
+                pakkha = 5;
+                remainder_pakkha += 15;
+            }
+            if (row["วรรค"] === "วรรค_จม_3_ล่าง" && wakkha === 3 && pakkha === 5) {
+                pakkha = 5;
+            }
+            // ปรับค่า ปักข์ เมื่อเศษเป็นศูนย์
             if (remainder_pakkha === 0) {
                 pakkha -= 1;
                 remainder_pakkha = 15;
@@ -156,6 +238,80 @@
                 "ข้าง": moonphase
             };
         }
+
+        function updateColumn(day) {
+            const result = calculateDates(day);
+            column["สัมพยุหะ"] = result["สัมพยุหะ"];
+            column["พยุหะ"] = result["พยุหะ"];
+            column["สมุหะ"] = result["สมุหะ"];
+            column["วรรค"] = result["วรรค"];
+            column["ปักข์"] = result["ปักข์"];
+        }
+
+        function updateRow() {
+            if (column["สัมพยุหะ"] === 18) {
+                row["พยุหะ"] = "พยุหะ_จม_10_ล่าง";
+            } else {
+                row["พยุหะ"] = "พยุหะ_จม_11_บน";
+            }
+            if (row["พยุหะ"].endsWith("บน") && column["พยุหะ"] === 11) {
+                row["สมุหะ"] = "สมุหะ_มจ_7_บน";
+            } else if (row["พยุหะ"].endsWith("ล่าง") && column["พยุหะ"] === 10) {
+                row["สมุหะ"] = "สมุหะ_มจ_7_บน";
+            } else {
+                row["สมุหะ"] = "สมุหะ_มจ_6_ล่าง";
+            }
+            if (row["สมุหะ"].endsWith("บน") && column["สมุหะ"] === 7) {
+                row["วรรค"] = "วรรค_จม_3_ล่าง";
+            } else if (row["สมุหะ"].endsWith("ล่าง") && column["สมุหะ"] === 6) {
+                row["วรรค"] = "วรรค_จม_3_ล่าง";
+            } else {
+                row["วรรค"] = "วรรค_จม_4_บน";
+            }
+            if (row["วรรค"].endsWith("บน") && column["วรรค"] === 4) {
+                row["ปักข์"] = "ปักข์_มจ_5_บน";
+            } else if (row["วรรค"].endsWith("ล่าง") && column["วรรค"] === 3) {
+                row["ปักข์"] = "ปักข์_มจ_5_บน";
+            } else {
+                row["ปักข์"] = "ปักข์_มจ_4_ล่าง";
+            }
+        }
+
+        function convertNumberToAlphabet() {
+            const mapping = {
+                1: "ก", 2: "ข", 3: "ฅ", 4: "จ", 5: "ห",
+                6: "ฉ", 7: "ษ", 8: "ฐ", 9: "ฬ", 10: "กฮ", 18: "กฐ"
+            };
+
+            if (row["ปักข์"] === "ปักข์_มจ_4_ล่าง" && column["ปักข์"] === 4) {
+                column["ปักข์"] = mapping[column["ปักข์"]];
+            }
+            if (row["ปักข์"] === "ปักข์_มจ_5_บน" && column["ปักข์"] === 5) {
+                column["ปักข์"] = mapping[column["ปักข์"]];
+            }
+            if (row["วรรค"] === "วรรค_จม_3_ล่าง" && column["วรรค"] < 3) {
+                column["วรรค"] = mapping[column["วรรค"]];
+            }
+            if (row["วรรค"] === "วรรค_จม_4_บน" && column["วรรค"] < 4) {
+                column["วรรค"] = mapping[column["วรรค"]];
+            }
+            if (row["สมุหะ"] === "สมุหะ_มจ_6_ล่าง" && column["สมุหะ"] === 6) {
+                column["สมุหะ"] = mapping[column["สมุหะ"]];
+            }
+            if (row["สมุหะ"] === "สมุหะ_มจ_7_บน" && column["สมุหะ"] === 7) {
+                column["สมุหะ"] = mapping[column["สมุหะ"]];
+            }
+            if (row["พยุหะ"] === "พยุหะ_จม_11_บน" && column["พยุหะ"] < 11) {
+                column["พยุหะ"] = mapping[column["พยุหะ"]];
+            }
+            if (row["พยุหะ"] === "พยุหะ_จม_10_ล่าง" && column["พยุหะ"] < 10) {
+                column["พยุหะ"] = mapping[column["พยุหะ"]];
+            }
+            if (column["สัมพยุหะ"] === 18) {
+                column["สัมพยุหะ"] = mapping[column["สัมพยุหะ"]];
+            }
+        }
+
 
         document.addEventListener('DOMContentLoaded', () => {
             const startDate = new Date('1736-01-28');
@@ -176,6 +332,7 @@
                 countDays();
             }
 
+            // แสดงผลลัพธ์
             function countDays() {
                 const endDate = new Date(endDateInput.value);
 
@@ -194,7 +351,19 @@
                     const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
                     dayCountDisplay.textContent = `จำนวนวัน: ${dayDiff.toLocaleString('th-TH')} วัน`;
                     updateBuddhistDateAndDay(endDate);
-                    updatePakkhakaResult(dayDiff);
+                    // แทรก ฟังก์ชั่นเงื่อนไข การเดินปักข์
+                    updateColumn(dayDiff);
+                    updateRow();
+                    convertNumberToAlphabet();
+                    // updatePakkhakaResult(dayDiff);
+                    document.getElementById('day').textContent = 'ก, ข, ฅ, จ, ห, ฉ, ษ, ฐ, ฬ, ฮ'
+                    document.getElementById('sampayuha').textContent = `สัมพยุหะ_มจ_18: ${column["สัมพยุหะ"]}`;
+                    document.getElementById('payuha').textContent = `${row["พยุหะ"]}: ${column["พยุหะ"]}`;
+                    document.getElementById('samuha').textContent = `${row["สมุหะ"]}: ${column["สมุหะ"]}`;
+                    document.getElementById('wakkha').textContent = `${row["วรรค"]}: ${column["วรรค"]}`;
+                    document.getElementById('pakkha').textContent = `${row["ปักข์"]}: ${column["ปักข์"]}`;
+                    document.getElementById('dithi').textContent = `ดิถี: ${calculateDates(dayDiff)["ดิถี"]}`;
+                    document.getElementById('moonphase').textContent = `ข้าง: ${calculateDates(dayDiff)["ข้าง"]}`;
                 } else {
                     dayCountDisplay.textContent = "กรุณาเลือกวันสิ้นสุด";
                     buddhistDateAndDayDisplay.textContent = "";
