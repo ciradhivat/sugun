@@ -90,8 +90,6 @@
             <p id="pakkha"></p>
             <p id="dithi"></p>
             <p id="moonphase"></p>
-            <p id="pak_code"></p>
-
         </div>
 
     </div>
@@ -228,6 +226,28 @@
             // คำนวณข้างขึ้นข้างแรม
             let moonphase = ((sampayuha-1)*1095 + (payuha-1)*98 + (samuha-1)*17 + (wakkha-1)*4 + pakkha) % 2 === 0 ? "ขึ้น" : "แรม";
 
+            // เพิ่ม การบอก เพ็ญ
+            let fullmoon = "";
+            if (row["ปักข์"] === "ปักข์_มจ_5_บน" && pakkha === 5 && remainder_pakkha === 14) {
+                fullmoon = "เพ็ญ";
+            } else if (row["ปักข์"] === "ปักข์_มจ_4_ล่าง" && pakkha === 4 && remainder_pakkha === 14) {
+                fullmoon = "เพ็ญ";
+            } else if (remainder_pakkha === 15) {
+                fullmoon = "เพ็ญ";
+            }
+            
+            // เพิ่ม การบอก ดิถีเพ็ญ
+            let fullDithi = ""
+            if (row["ปักข์"] === "ปักข์_มจ_5_บน" && pakkha != 5) {
+                fullDithi = "(15)"
+            }
+            else if (row["ปักข์"] === "ปักข์_มจ_4_ล่าง" && pakkha != 4) {
+                fullDithi = "(15)"
+            }
+            else {
+                fullDithi = "(14)"
+            }
+
             return {
                 "สัมพยุหะ": sampayuha,
                 "พยุหะ": payuha,
@@ -235,7 +255,9 @@
                 "วรรค": wakkha,
                 "ปักข์": pakkha,
                 "ดิถี": remainder_pakkha,
-                "ข้าง": moonphase
+                "ข้าง": moonphase,
+                "เพ็ญ": fullmoon,
+                "ดิถีเพ็ญ": fullDithi
             };
         }
 
@@ -362,7 +384,7 @@
                     document.getElementById('samuha').textContent = `${row["สมุหะ"]}: ${column["สมุหะ"]}`;
                     document.getElementById('wakkha').textContent = `${row["วรรค"]}: ${column["วรรค"]}`;
                     document.getElementById('pakkha').textContent = `${row["ปักข์"]}: ${column["ปักข์"]}`;
-                    document.getElementById('dithi').textContent = `ดิถี: ${calculateDates(dayDiff)["ดิถี"]}`;
+                    document.getElementById('dithi').textContent = `ดิถี: ${calculateDates(dayDiff)["ดิถี"]} ${calculateDates(dayDiff)["ดิถีเพ็ญ"]} ${calculateDates(dayDiff)["เพ็ญ"]}`;
                     document.getElementById('moonphase').textContent = `ข้าง: ${calculateDates(dayDiff)["ข้าง"]}`;
                 } else {
                     dayCountDisplay.textContent = "กรุณาเลือกวันสิ้นสุด";
